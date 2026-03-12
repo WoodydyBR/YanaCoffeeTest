@@ -1,0 +1,179 @@
+:root { --accent: #ffcc33; --bg: #0d0a08; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: radial-gradient(ellipse at 40% 30%, #3a2210 0%, #1a0f07 50%, #0d0a08 100%);
+    color: #fff;
+    font-family: 'Courier Prime', monospace;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Фоновые пятна */
+.coffee-stain {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    background: url('https://www.transparentpng.com/download/coffee-stain/coffee-stain-png-photos-3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.07;
+    pointer-events: none;
+    z-index: 2;
+}
+.stain-1 { top: -50px; left: -50px; filter: sepia(1); }
+.stain-2 { bottom: -20px; right: -30px; transform: rotate(180deg); filter: sepia(1); }
+
+/* Эффект молока */
+.milk-drop {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100;
+    filter: blur(3px);
+    animation: melt 0.8s ease-out forwards;
+}
+@keyframes melt {
+    0% { transform: scale(1); opacity: 0.4; }
+    100% { transform: scale(4); opacity: 0; }
+}
+
+/* Музыкальный контроллер */
+.audio-control {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--accent);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s;
+}
+.audio-control.playing { animation: rotateVinyl 4s linear infinite; }
+@keyframes rotateVinyl { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+/* Зерно и виньетка */
+body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+body::after {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.72) 100%);
+}
+
+.bg-particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+.particle { position: absolute; background: var(--accent); border-radius: 50%; opacity: 0.08; animation: float 20s infinite linear; }
+@keyframes float { 0% { transform: translateY(105vh); } 100% { transform: translateY(-10vh); } }
+
+.filter-container { z-index: 10; margin-bottom: 10px; }
+select {
+    background: rgba(255,255,255,0.07); color: var(--accent); border: 1px solid rgba(255,204,51,0.3);
+    padding: 6px 15px; border-radius: 20px; font-family: 'Caveat', cursive; font-size: 1.2rem; outline: none; cursor: pointer;
+}
+
+h1 { font-family: 'Caveat', cursive; font-size: 2.2rem; color: var(--accent); z-index: 10; user-select: none; text-shadow: 0 2px 20px rgba(255,204,51,0.25); }
+.subtitle { font-family: 'Caveat', cursive; font-size: 1.3rem; color: #e07070; margin-bottom: 20px; z-index: 10; }
+
+.slider-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+}
+.slider-container { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.slider-container::-webkit-scrollbar { display: none; }
+
+.coffee-card {
+    min-width: 80%;
+    max-width: 80%;
+    scroll-snap-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.polaroid-wrap {
+    width: 88%;
+    position: relative;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+    cursor: pointer;
+    transform: rotate(var(--r, 0deg));
+}
+.polaroid-wrap.flipped { transform: rotateY(180deg) rotate(0deg) !important; }
+
+.polaroid-front, .polaroid-back {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: #fdfaf2;
+    padding: 12px 12px 55px 12px;
+    box-shadow: 0 6px 16px rgba(90,40,10,0.4), 0 22px 50px rgba(50,18,5,0.65), 0 2px 4px rgba(255,200,120,0.07);
+}
+
+.polaroid-back {
+    position: absolute;
+    inset: 0;
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #3d2b1f;
+}
+
+.back-note { font-family: 'Caveat', cursive; font-size: 1.4rem; text-align: center; padding: 10px; }
+
+.polaroid-front img { width: 100%; height: 280px; object-fit: cover; display: block; }
+
+.date-text {
+    position: absolute; bottom: 12px; left: 0; right: 0; text-align: center;
+    color: #3d2b1f; font-family: 'Caveat', cursive; font-size: 1.6rem; font-weight: 700;
+    opacity: 0; transition: opacity 1s ease;
+}
+.visible .date-text { opacity: 1; }
+
+.nav-btn {
+    position: absolute; background: rgba(255,255,255,0.05); border: 1px solid var(--accent);
+    color: var(--accent); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+}
+.prev { left: -15px; } .next { right: -15px; }
+
+.bottom-nav { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 15px; z-index: 10; }
+.counter { font-size: 0.8rem; color: rgba(255,255,255,0.4); }
+.dots { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: 260px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; }
+.dot.active { background: var(--accent); transform: scale(1.4); }
+
+/* LIGHTBOX */
+.lightbox { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.92); backdrop-filter: blur(14px); align-items: center; justify-content: center; }
+.lightbox.open { display: flex; animation: lbFadeIn 0.25s ease both; }
+@keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.lightbox-inner { display: flex; flex-direction: column; align-items: center; gap: 14px; animation: lbZoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
+@keyframes lbZoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.lightbox-polaroid { background: #fdfaf2; padding: 14px 14px 60px 14px; box-shadow: 0 12px 30px rgba(90,40,10,0.6), 0 50px 100px rgba(10,5,0,0.95); position: relative; max-width: 90vw; max-height: 80vh; }
+.lightbox-polaroid img { display: block; max-width: 80vw; max-height: 65vh; width: auto; height: auto; object-fit: contain; }
+.lightbox-date { text-align: center; color: #3d2b1f; font-family: 'Caveat', cursive; font-size: 1.8rem; font-weight: 700; position: absolute; bottom: 12px; left: 0; right: 0; }
+.lightbox-close { position: fixed; top: 20px; right: 24px; background: none; border: none; color: var(--accent); font-size: 2.5rem; cursor: pointer; z-index: 1001; }
+
+@media (max-width: 600px) { .nav-btn { display: none; } }
