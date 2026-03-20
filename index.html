@@ -1,70 +1,331 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Latte arts by Yana✨</title>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Courier+Prime&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latte Arts by Yana</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="coffee-stain stain-1" id="stain1"></div>
-    <div class="coffee-stain stain-2" id="stain2"></div>
-    <div class="bg-particles" id="particles"></div>
+<nav class="navbar">
+  <a class="nav-logo" href="#">· LATTE ARTS ·</a>
+  <ul class="nav-links">
+    <li><a href="#gallery">gallery</a></li>
+    <li><a href="#about"> About me</a></li>
+    <li><a href="#guestbook">Гостевая</a></li>
+  </ul>
+  <button class="burger" id="burgerBtn" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-    <div class="audio-control" onclick="toggleMusic()">
-        <span id="music-icon">🎵</span>
-        <audio id="bg-music" loop>
-            <source src="musicvof.mp3" type="audio/mpeg">
-        </audio>
-    </div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#gallery" onclick="closeMenu()">gallery</a>
+  <a href="#about"   onclick="closeMenu()">About me</a>
+  <a href="#guestbook" onclick="closeMenu()">Гостевая</a>
+</div>
 
-    <div class="filter-container">
-        <select id="monthFilter" onchange="applyFilter()">
-            <option value="all">All arts</option>
-        </select>
-    </div>
+<section class="hero">
+  <!-- Parallax background layer -->
+  <div class="hero-parallax-bg"></div>
+  <!-- Steam rises above the text -->
+  <div class="steam-wrap">
+    <div class="s"></div><div class="s"></div><div class="s"></div>
+    <div class="s"></div><div class="s"></div>
+  </div>
+  <div class="hero-sup"> Latte Art </div>
+  <div class="hero-title">
+    <span class="w">LATTE</span>
+    <span class="g">ARTS</span>
+  </div>
+  <div class="hero-sub">Какая-то важная цитата</div>
+  <div class="hero-line"></div>
+  <button class="audio-btn" id="audioBtn" onclick="toggleMusic()">
+    <span id="music-icon">♪</span>
+    <span id="audio-label">music</span>
+  </button>
+  <audio id="bg-music" loop><source src="musicvof.mp3" type="audio/mpeg"></audio>
+  <div class="scroll-hint">
+    <span>Листай вниз</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
 
-    <h1>Latte arts by Yana ✨</h1>
-    <div class="subtitle">Made with love დ</div>
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" data-val="all" onclick="applyFilter('all',this)">ALL</button>
+</div>
 
-    <div class="slider-wrapper">
-        <button class="nav-btn prev" onclick="move(-1)">❮</button>
-        <button class="nav-btn next" onclick="move(1)">❯</button>
+<div class="gallery-section" id="gallery">
+  <div class="gallery-header">
+    <span class="gallery-label">Gallery</span>
+    <span class="gallery-count" id="galleryCount">0 работ</span>
+  </div>
+  <div class="gallery-title-row">
+    <h2 class="gallery-title">Какой-то  <span>ТЕКСТ</span></h2>
+    <div class="title-line"></div>
+  </div>
 
-        <div class="slider-container" id="slider">
-            <div class="coffee-card" data-date="2025-12"><div class="polaroid-wrap" style="--r:3deg" onclick="handleCardClick(event,this)"><div class="polaroid-front"><img src="IMG_20251217_142151.jpg" onclick="openLightbox(this.closest('.polaroid-wrap')); event.stopPropagation();"><div class="date-text">17.12.2025</div></div><div class="polaroid-back"><div class="back-note">TEST</div></div></div></div>
-            <div class="coffee-card" data-date="2026-01"><div class="polaroid-wrap" style="--r:-2deg" onclick="handleCardClick(this)"><div class="polaroid-front"><img src="IMG_20260106_115427.jpg"><div class="date-text">06.01.2026</div></div><div class="polaroid-back"><div class="back-note">TEST</div></div></div></div>
-            <div class="coffee-card" data-date="2026-01"><div class="polaroid-wrap" style="--r:1deg" onclick="handleCardClick(this)"><div class="polaroid-front"><img src="IMG_20260115_115318.jpg"><div class="date-text">15.01.2026</div></div><div class="polaroid-back"><div class="back-note">TEST</div></div></div></div>
-            <div class="coffee-card" data-date="2026-01"><div class="polaroid-wrap" style="--r:-3deg" onclick="handleCardClick(this)"><div class="polaroid-front"><img src="IMG_20260119_103301.jpg"><div class="date-text">19.01.2026</div></div><div class="polaroid-back"><div class="back-note">TEST</div></div></div></div>
-            <div class="coffee-card" data-date="2026-01"><div class="polaroid-wrap" style="--r:2deg" onclick="handleCardClick(this)"><div class="polaroid-front"><img src="IMG_20260120_124125.jpg"><div class="date-text">20.01.2026</div></div><div class="polaroid-back"><div class="back-note">TEST</div></div></div></div>
-            <div class="coffee-card" data-date="2026-01"><div class="polaroid-wrap" style="--r:-1deg" onclick="handleCardClick(this)"><div class="polaroid-front"><img src="IMG_20260129_144001.jpg"><div class="date-text">29.01.2026</div></div><div class="polaroid-back"><div class="back-note">TEST</div></div></div></div>
-            <div class="coffee-card" data-date="2026-01"><div class="polaroid-wrap" style="--r:4deg" onclick="handleCardClick(this)"><div class="polaroid-front"><img src="IMG_20260129_154607.jpg"><div class="date-text">29.01.2026</div></div><div class="polaroid-back"><div class="back-note">TEST</div></div></div></div>
-            <div class="coffee-card" data-date="2026-02"><div class="polaroid-wrap" style="--r:-2deg" onclick="handleCardClick(this)"><div class="polaroid-front"><img src="IMG_20260216_133451.jpg"><div class="date-text">16.02.2026</div></div><div class="polaroid-back"><div class="back-note">TEST</div></div></div></div>
-            <div class="coffee-card" data-date="2026-03"><div class="polaroid-wrap" style="--r:1deg" onclick="handleCardClick(this)"><div class="polaroid-front"><img src="IMG_20260302_115217.jpg"><div class="date-text">02.03.2026</div></div><div class="polaroid-back"><div class="back-note">TEST</div></div></div></div>
-            <div class="coffee-card" data-date="2026-03"><div class="polaroid-wrap" style="--r:-2deg" onclick="handleCardClick(this)"><div class="polaroid-front"><img src="IMG_20260305_105547.jpg"><div class="date-text">05.03.2026</div></div><div class="polaroid-back"><div class="back-note">TEST</div></div></div></div>
-            <div class="coffee-card" data-date="unknown"><div class="polaroid-wrap" style="--r:1deg" onclick="handleCardClick(this)"><div class="polaroid-front"><img src="photo1.jpg"><div class="date-text">xx.xx.xxxx</div></div><div class="polaroid-back"><div class="back-note">TEST</div></div></div></div>
-        </div>
-    </div>
+  <div class="slider-wrapper">
+    <div class="slider-container" id="slider">
 
-    <div class="bottom-nav">
-        <div class="counter"><span id="current">1</span> / <span id="total">0</span></div>
-        <div class="dots" id="dots"></div>
-    </div>
-
-    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-        <div class="lightbox-inner">
-            <div class="lightbox-polaroid">
-                <img id="lb-img" src="" alt="">
-                <div class="lightbox-date" id="lb-date"></div>
+      <div class="coffee-card" data-date="2025-12">
+        <div class="polaroid-wrap" style="--r:1.5deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20251217_142151.jpg" class="card-img" alt="">
             </div>
+            <div class="date-strip"><span class="date-text">17.12.2025</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">Тут могла быть ваша реклама ❤️ </div><div class="back-deco"></div></div>
         </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-01">
+        <div class="polaroid-wrap" style="--r:-1.5deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260106_115427.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">06.01.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-01">
+        <div class="polaroid-wrap" style="--r:2deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260115_115318.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">15.01.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-01">
+        <div class="polaroid-wrap" style="--r:-2deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260119_103301.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">19.01.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-01">
+        <div class="polaroid-wrap" style="--r:1deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260120_124125.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">20.01.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-01">
+        <div class="polaroid-wrap" style="--r:-1deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260129_144001.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">29.01.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-01">
+        <div class="polaroid-wrap" style="--r:2.5deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260129_154607.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">29.01.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-02">
+        <div class="polaroid-wrap" style="--r:-1.5deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260216_133451.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">16.02.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-03">
+        <div class="polaroid-wrap" style="--r:1deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260302_115217.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">02.03.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-03">
+        <div class="polaroid-wrap" style="--r:-2deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260305_105547.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">05.03.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="unknown">
+        <div class="polaroid-wrap" style="--r:1.5deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="photo1.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">xx.xx.xxxx</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-03">
+        <div class="polaroid-wrap" style="--r:-1deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260309_153926.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">09.03.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-03">
+        <div class="polaroid-wrap" style="--r:2deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260311_153201.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">11.03.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
+      <div class="coffee-card" data-date="2026-03">
+        <div class="polaroid-wrap" style="--r:-2deg" onclick="handleFlip(event,this)">
+          <div class="polaroid-front">
+            <div class="img-shell">
+              <div class="skeleton"></div>
+              <img src="IMG_20260316_151320.jpg" class="card-img" alt="">
+            </div>
+            <div class="date-strip"><span class="date-text">16.03.2026</span><button class="open-btn" onclick="openLightbox(this.closest('.polaroid-wrap'));event.stopPropagation()">↗ ОТКРЫТЬ</button></div>
+          </div>
+          <div class="polaroid-back"><div class="back-deco"></div><div class="back-note">TEST</div><div class="back-deco"></div></div>
+        </div>
+      </div>
+
     </div>
 
-    <script src="script.js"></script>
+    <div class="nav-arrows">
+      <button class="arr-btn" id="prevBtn" onclick="move(-1)">← НАЗАД</button>
+      <div class="progress-line"><div class="progress-fill" id="progressFill"></div></div>
+      <span class="counter"><span id="curNum">1</span> / <span id="totNum">0</span></span>
+      <button class="arr-btn" id="nextBtn" onclick="move(1)">ВПЕРЁД →</button>
+    </div>
+    <div class="dots" id="dots"></div>
+  </div>
+</div>
+
+<div class="about-section" id="about">
+  <div>
+    <div class="about-label">мелкая хуета</div>
+    <h2 class="about-title"> <span> Хуета</span></h2>
+    <p class="about-text">Какой-то текст о хуете</p>
+    <p class="about-text">Какой-то текст о хуете №2</p>
+  </div>
+  <div class="about-stats">
+    <div class="stat-item"><div class="stat-num" id="statWorks">Че-то важное</div><div class="stat-label">Название чего-то важного</div></div>
+    <div class="stat-item"><div class="stat-num">Че-то важное №2</div><div class="stat-label">Название чего-то важного №2</div></div>
+    <div class="stat-item"><div class="stat-num">Че-то важное №3</div><div class="stat-label">Название чего-то важного №3</div></div>
+  </div>
+</div>
+
+<section class="guestbook-section" id="guestbook">
+  <div class="gb-inner">
+    <div class="gb-header">
+      <span class="gb-label">Гостевая книга</span>
+      <h2 class="gb-title">Оставь <span>записку</span></h2>
+      <p class="gb-sub">Напиши что думаешь — стикер появится на доске навсегда&nbsp;✦</p>
+    </div>
+
+    <div class="gb-form-wrap">
+      <div class="gb-form">
+        <div class="gb-form-top">
+          <input class="gb-input gb-name" id="gbName" maxlength="24" placeholder="Твоё имя..." autocomplete="off">
+          <div class="gb-color-pick" id="gbColors">
+            <button class="gb-color active" data-color="yellow"  style="background:#fef08a" aria-label="жёлтый"></button>
+            <button class="gb-color" data-color="pink"    style="background:#fecdd3" aria-label="розовый"></button>
+            <button class="gb-color" data-color="mint"    style="background:#bbf7d0" aria-label="мятный"></button>
+            <button class="gb-color" data-color="blue"    style="background:#bae6fd" aria-label="синий"></button>
+            <button class="gb-color" data-color="peach"   style="background:#fed7aa" aria-label="персиковый"></button>
+          </div>
+        </div>
+        <textarea class="gb-input gb-msg" id="gbMsg" maxlength="160" placeholder="Твоя записка... (макс. 160 символов)"></textarea>
+        <div class="gb-form-footer">
+          <span class="gb-chars" id="gbChars">160</span>
+          <button class="gb-submit" id="gbSubmit" onclick="gbPost()">Прикрепить ✦</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gb-board" id="gbBoard">
+      <div class="gb-empty" id="gbEmpty">Пока пусто — будь первым&nbsp;☕</div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- <button class="lb-close" onclick="closeLightbox()">✕</button> -->
+  <div class="lb-inner">
+    <!-- <div class="lb-polaroid">
+      <img id="lb-img" src="" alt="">
+      <div class="lb-date" id="lb-date"></div>
+    </div> -->
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+    <div class="cur-dot"></div>
+  </div>
+</div>
 </body>
 </html>
-        
-   
