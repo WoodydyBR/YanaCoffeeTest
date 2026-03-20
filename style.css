@@ -1006,11 +1006,17 @@ body::before{
 /* Board */
 .gb-board {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 60px 20px;
-  align-items: start;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
   min-height: 60px;
-  padding: 30px 0 10px;
+  padding: 20px 0 10px;
+}
+.gb-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+  min-height: 220px;
 }
 .gb-empty {
   font-family: 'Caveat', cursive;
@@ -1034,8 +1040,7 @@ body::before{
               box-shadow .25s;
   cursor: default;
   animation: stickerDrop .45s cubic-bezier(.34,1.2,.64,1) both;
-  margin: 10px auto;
-  justify-self: center;
+  margin: 0;
 }
 .gb-sticker:hover {
   transform: rotate(0deg) scale(1.06) translateY(-4px);
