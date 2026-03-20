@@ -172,49 +172,63 @@ slider.addEventListener('scroll',()=>{
 buildFilterBar();
 applyFilter('all',document.querySelector('.filter-btn[data-val="all"]'));
 /* ══════════════════════════════════════
-   GUESTBOOK
+   GUESTBOOK — Firebase Realtime Database
 ══════════════════════════════════════ */
-(function() {
-  const STORAGE_KEY = 'latte_guestbook_v1';
-  const COLORS = ['yellow','pink','mint','blue','peach'];
+(function () {
+
+  /* ──────────────────────────────────────
+     🔧 ВСТАВЬ СЮДА СВОИ ДАННЫЕ ИЗ FIREBASE
+     (Project Settings → Your apps → SDK setup)
+  ────────────────────────────────────── */
+  const FB_CONFIG = {
+    apiKey: "AIzaSyB-3YXP3bFxloeV1shdyrFpvoL6ZjgJkRI",
+    authDomain: "testcoffe-850ac.firebaseapp.com",
+    databaseURL: "https://testcoffe-850ac-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "testcoffe-850ac",
+    storageBucket: "testcoffe-850ac.firebasestorage.app",
+    messagingSenderId: "597204624155",
+    appId: "1:597204624155:web:2572efd9f39ac8599169be",
+    measurementId: "G-7Q3QS2KGST"
+  };
+
+  /* ── Цвета и оформление ── */
   const ROTATIONS = [-3,-2,-1.5,-1,0,1,1.5,2,3,2.5,-2.5];
   const TAPE_ROTS = [-3,-1,0,2,-2,1];
   let selectedColor = 'yellow';
 
-  function getEntries() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-    catch { return []; }
+  /* ── Firebase SDK (модульный v9 compat) ── */
+  const FB_SDK = 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js';
+  const FB_DB  = 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js';
+
+  let db, entriesRef;
+  let localKey = 'latte_gb_mine_v1'; // ключи своих записок (для кнопки удаления)
+
+  function getMyKeys() {
+    try { return JSON.parse(localStorage.getItem(localKey)) || []; } catch { return []; }
   }
-  function saveEntries(arr) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch {}
+  function addMyKey(k) {
+    const keys = getMyKeys(); keys.push(k); 
+    try { localStorage.setItem(localKey, JSON.stringify(keys)); } catch {}
   }
+  function removeMyKey(k) {
+    const keys = getMyKeys().filter(x => x !== k);
+    try { localStorage.setItem(localKey, JSON.stringify(keys)); } catch {}
+  }
+
   function formatDate(ts) {
-    const d = new Date(ts);
-    return d.toLocaleDateString('ru-RU', { day:'2-digit', month:'2-digit', year:'2-digit' });
+    return new Date(ts).toLocaleDateString('ru-RU', {day:'2-digit',month:'2-digit',year:'2-digit'});
+  }
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  function renderAll() {
-    const board = document.getElementById('gbBoard');
-    const empty = document.getElementById('gbEmpty');
-    const entries = getEntries();
-    // Remove old stickers
-    board.querySelectorAll('.gb-sticker').forEach(s => s.remove());
-    if (entries.length === 0) {
-      empty.style.display = 'block';
-      return;
-    }
-    empty.style.display = 'none';
-    entries.forEach((e, i) => {
-      const el = createSticker(e, i);
-      board.appendChild(el);
-    });
-  }
-
-  function createSticker(entry, idx) {
+  function createSticker(key, entry, idx) {
     const rot = ROTATIONS[idx % ROTATIONS.length];
     const tr  = TAPE_ROTS[idx % TAPE_ROTS.length];
+    const mine = getMyKeys().includes(key);
     const el = document.createElement('div');
-    el.className = `gb-sticker ${entry.color}`;
+    el.className = `gb-sticker ${entry.color || 'yellow'}`;
+    el.dataset.key = key;
     el.style.setProperty('--sr', rot + 'deg');
     el.style.setProperty('--tr', tr + 'deg');
     el.style.animationDelay = Math.min(idx * 0.04, 0.4) + 's';
@@ -222,61 +236,60 @@ applyFilter('all',document.querySelector('.filter-btn[data-val="all"]'));
       <div class="gb-sticker-name">${escHtml(entry.name || 'Аноним')}</div>
       <div class="gb-sticker-text">${escHtml(entry.text)}</div>
       <div class="gb-sticker-date">${formatDate(entry.ts)}</div>
-      ${entry.mine ? `<button class="gb-del" title="Удалить" onclick="gbDelete(${entry.ts})">✕</button>` : ''}
+      ${mine ? `<button class="gb-del" title="Удалить" onclick="gbDelete('${key}')">✕</button>` : ''}
     `;
     return el;
   }
 
-  function escHtml(s) {
-    return String(s)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;');
+  function renderAll(snapshot) {
+    const board = document.getElementById('gbBoard');
+    const empty = document.getElementById('gbEmpty');
+    board.querySelectorAll('.gb-sticker').forEach(s => s.remove());
+
+    const entries = [];
+    snapshot.forEach(child => entries.unshift({ key: child.key, ...child.val() }));
+
+    if (entries.length === 0) { empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    entries.forEach((e, i) => board.appendChild(createSticker(e.key, e, i)));
   }
 
-  // Expose globally
-  window.gbPost = function() {
+  /* ── Слушаем Firebase в реальном времени ── */
+  function startListening() {
+    entriesRef.on('value', snapshot => renderAll(snapshot));
+  }
+
+  /* ── Публичные функции ── */
+  window.gbPost = function () {
     const name = document.getElementById('gbName').value.trim();
     const text = document.getElementById('gbMsg').value.trim();
     if (!text) {
-      document.getElementById('gbMsg').focus();
-      document.getElementById('gbMsg').style.borderColor = 'rgba(248,113,113,0.7)';
-      setTimeout(() => document.getElementById('gbMsg').style.borderColor = '', 800);
+      const ta = document.getElementById('gbMsg');
+      ta.focus();
+      ta.style.borderColor = 'rgba(248,113,113,0.7)';
+      setTimeout(() => ta.style.borderColor = '', 800);
       return;
     }
-    const entry = {
-      name: name || 'Аноним',
-      text,
-      color: selectedColor,
-      ts: Date.now(),
-      mine: true
-    };
-    const entries = getEntries();
-    entries.unshift(entry); // newest first
-    saveEntries(entries);
-    // Reset form
+    const entry = { name: name || 'Аноним', text, color: selectedColor, ts: Date.now() };
+    const ref = entriesRef.push(entry);
+    addMyKey(ref.key);
+
     document.getElementById('gbName').value = '';
-    document.getElementById('gbMsg').value = '';
+    document.getElementById('gbMsg').value  = '';
     document.getElementById('gbChars').textContent = '160';
-    // Animate submit btn
+
     const btn = document.getElementById('gbSubmit');
     btn.textContent = 'Готово ✓';
     btn.style.background = '#4ade80';
-    setTimeout(() => {
-      btn.textContent = 'Прикрепить ✦';
-      btn.style.background = '';
-    }, 1400);
-    renderAll();
+    setTimeout(() => { btn.textContent = 'Прикрепить ✦'; btn.style.background = ''; }, 1400);
   };
 
-  window.gbDelete = function(ts) {
-    const entries = getEntries().filter(e => e.ts !== ts);
-    saveEntries(entries);
-    renderAll();
+  window.gbDelete = function (key) {
+    entriesRef.child(key).remove();
+    removeMyKey(key);
   };
 
-  // Color picker
+  /* ── Color picker ── */
   document.getElementById('gbColors').addEventListener('click', e => {
     const btn = e.target.closest('.gb-color');
     if (!btn) return;
@@ -285,19 +298,36 @@ applyFilter('all',document.querySelector('.filter-btn[data-val="all"]'));
     selectedColor = btn.dataset.color;
   });
 
-  // Char counter
-  document.getElementById('gbMsg').addEventListener('input', function() {
+  /* ── Счётчик символов ── */
+  document.getElementById('gbMsg').addEventListener('input', function () {
     const left = 160 - this.value.length;
     const el = document.getElementById('gbChars');
     el.textContent = left;
     el.classList.toggle('low', left < 20);
   });
 
-  // Enter to submit (Ctrl+Enter in textarea)
+  /* ── Ctrl+Enter ── */
   document.getElementById('gbMsg').addEventListener('keydown', e => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) window.gbPost();
   });
 
-  // Initial render
-  renderAll();
+  /* ── Загружаем Firebase SDK динамически ── */
+  function loadScript(src) {
+    return new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = src; s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+
+  loadScript(FB_SDK).then(() => loadScript(FB_DB)).then(() => {
+    firebase.initializeApp(FB_CONFIG);
+    db          = firebase.database();
+    entriesRef  = db.ref('guestbook');
+    startListening();
+  }).catch(err => {
+    console.error('Firebase load error:', err);
+    document.getElementById('gbEmpty').textContent = '⚠ Не удалось подключиться к базе данных';
+  });
+
 })();
