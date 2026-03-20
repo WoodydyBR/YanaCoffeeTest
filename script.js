@@ -181,18 +181,17 @@ applyFilter('all',document.querySelector('.filter-btn[data-val="all"]'));
      (Project Settings → Your apps → SDK setup)
   ────────────────────────────────────── */
   const FB_CONFIG = {
-    apiKey: "AIzaSyB-3YXP3bFxloeV1shdyrFpvoL6ZjgJkRI",
-    authDomain: "testcoffe-850ac.firebaseapp.com",
-    databaseURL: "https://testcoffe-850ac-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "testcoffe-850ac",
-    storageBucket: "testcoffe-850ac.firebasestorage.app",
-    messagingSenderId: "597204624155",
-    appId: "1:597204624155:web:2572efd9f39ac8599169be",
-    measurementId: "G-7Q3QS2KGST"
+    apiKey:            "ЗАМЕНИ_НА_СВОЙ",
+    authDomain:        "ЗАМЕНИ_НА_СВОЙ.firebaseapp.com",
+    databaseURL:       "https://ЗАМЕНИ_НА_СВОЙ-default-rtdb.firebaseio.com",
+    projectId:         "ЗАМЕНИ_НА_СВОЙ",
+    storageBucket:     "ЗАМЕНИ_НА_СВОЙ.firebasestorage.app",
+    messagingSenderId: "ЗАМЕНИ_НА_СВОЙ",
+    appId:             "ЗАМЕНИ_НА_СВОЙ"
   };
 
   /* ── Цвета и оформление ── */
-  const ROTATIONS = [-3,-2,-1.5,-1,0,1,1.5,2,3,2.5,-2.5];
+  const ROTATIONS = [-2,-1.5,-1,-0.5,0,0.5,1,1.5,2,-1,1];
   const TAPE_ROTS = [-3,-1,0,2,-2,1];
   let selectedColor = 'yellow';
 
