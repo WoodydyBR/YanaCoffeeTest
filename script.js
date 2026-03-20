@@ -226,6 +226,8 @@ applyFilter('all',document.querySelector('.filter-btn[data-val="all"]'));
     const tr  = TAPE_ROTS[idx % TAPE_ROTS.length];
     const mine = getMyKeys().includes(key);
     const el = document.createElement('div');
+    const wrapper = document.createElement('div');
+    wrapper.className = 'gb-cell';
     el.className = `gb-sticker ${entry.color || 'yellow'}`;
     el.dataset.key = key;
     el.style.setProperty('--sr', rot + 'deg');
@@ -237,7 +239,8 @@ applyFilter('all',document.querySelector('.filter-btn[data-val="all"]'));
       <div class="gb-sticker-date">${formatDate(entry.ts)}</div>
       ${mine ? `<button class="gb-del" title="Удалить" onclick="gbDelete('${key}')">✕</button>` : ''}
     `;
-    return el;
+    wrapper.appendChild(el);
+    return wrapper;
   }
 
   function renderAll(snapshot) {
